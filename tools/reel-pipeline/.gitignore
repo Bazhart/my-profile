@@ -1,0 +1,9 @@
+# generated media / personal photos never go to git
+pipeline_out/
+*.mp4
+*.png
+*.jpg
+*.jpeg
+*.wav
+*.mkv
+__pycache__/
