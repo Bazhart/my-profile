@@ -1030,7 +1030,10 @@ def replace_wan_isolate(a, fal: Fal, out: Path, tpl: dict, final: Path) -> Path 
         else:
             # Basil is behind Pierre: hide Pierre's box (+ others), give back Basil's box, hide Pierre's head
             # even where it overlaps Basil's box, then give back Basil's head.
-            ops = ([B("pierre", i, mg) + (255,)] + [B(o, i, mg) + (255,) for o in others]
+            # The silent third man is left visible by default: Wan keeps the largest person (Basil here), and
+            # greying him out made Wan hallucinate junk in the hole (seen in the 4 s test). --hide-others restores it.
+            hide = others if getattr(a, "hide_others", False) else []
+            ops = ([B("pierre", i, mg) + (255,)] + [B(o, i, mg) + (255,) for o in hide]
                    + [B("basil", i, 0.02) + (0,)])
             ops += [oh + (255,)] if oh else []
             ops += [th + (0,)] if th else []
@@ -1603,6 +1606,7 @@ def build_parser() -> argparse.ArgumentParser:
         p.add_argument("--steps", type=int, default=20, help="Wan num_inference_steps (try 30 if faces are soft)")
         p.add_argument("--wan-seed", dest="seed_wan", type=int, default=42)
         p.add_argument("--basil-crop", choices=["auto", "off"], default="auto")
+        p.add_argument("--hide-others", action="store_true", help="also grey out the third man in Basil's pass (old behaviour)")
         p.add_argument("--blank-margin", type=float, default=0.06, help="box growth when hiding people")
         p.add_argument("--isolate", choices=["head", "box"], default="head",
                        help="head (default): hide the other man's whole box, give back only the target's head "
