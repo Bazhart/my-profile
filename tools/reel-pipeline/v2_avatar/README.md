@@ -13,3 +13,13 @@ Le remplacement de personnage de `run_pipeline.py` (Wan 2.2 Animate) donnait des
 `omni.py` (OmniHuman v1.5) renvoyait « downstream_service_unavailable » à chaque essai, même sans masque et avec une petite image.
 
 La clé est lue dans `FAL_KEY`, uniquement par `fal-client`. Aucune photo ni vidéo n'est versionnée.
+
+## Correctif : l'auditeur articule les répliques de l'autre
+
+Kling AI Avatar fait bouger la bouche de tous les visages sur l'audio, même quand le prompt précise que l'auditeur ne parle pas. Pour corriger :
+
+1. Recadrer une zone fixe autour de l'auditeur, où il est le plus grand visage : `crop=560:560:420:330`.
+2. Rééchantillonner cette zone en 25 images/s. LatentSync sort en 25 i/s ; si on lui donne du 30 i/s, sa sortie est décalée d'environ 1,5 image.
+3. Lancer `latentsync.py` avec un audio silencieux.
+4. La recoller sur le plan à 25 i/s, avec un masque aux bords flous.
+5. Faire le montage final à 25 i/s.
