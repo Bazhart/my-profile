@@ -77,6 +77,10 @@ a:hover{
 	border-radius: 50%;
 }
 
+.img-logo {
+	border-radius: 16px;
+}
+
 .btn-blue {
 	background-color: #6B72E1;
 	color: white;
